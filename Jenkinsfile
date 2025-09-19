@@ -10,7 +10,7 @@ pipeline {
     stage('Build Docker Image') {
       steps {
         script {
-          COMMIT = sh(returnStdout: true, script: "git rev-parse --short HEAD").trim()
+          def COMMIT = sh(returnStdout: true, script: "git rev-parse --short HEAD").trim()
           sh "docker build -t ${DOCKER_IMAGE}:${COMMIT} -t ${DOCKER_IMAGE}:latest ."
         }
       }
@@ -29,14 +29,10 @@ pipeline {
   }
   post {
     success {
-      steps {
-        echo "CI successful."
-      }
+      echo "CI successful."
     }
     failure {
-      steps {
-        echo "CI failed."
-      }
+      echo "CI failed."
     }
   }
 }
