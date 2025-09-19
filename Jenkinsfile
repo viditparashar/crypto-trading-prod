@@ -2,7 +2,7 @@ pipeline {
   agent any
   environment {
     DOCKER_IMAGE = "viditparashar12/trading-prod"
-    DOCKERHUB_CRED = 'dockerhub-creds'
+    DOCKERHUB_CRED = '1'
   }
   stages {
     stage('Checkout') { steps { checkout scm } }
