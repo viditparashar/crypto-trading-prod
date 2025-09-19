@@ -27,5 +27,16 @@ pipeline {
       }
     }
   }
-  post { success { echo "CI successful." } failure { echo "CI failed." } }
+  post {
+    success {
+      steps {
+        echo "CI successful."
+      }
+    }
+    failure {
+      steps {
+        echo "CI failed."
+      }
+    }
+  }
 }
