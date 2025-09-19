@@ -2,11 +2,17 @@ pipeline {
   agent any
   environment {
     DOCKER_IMAGE = "viditparashar12/trading-prod"
-    DOCKERHUB_CRED = '1'
+    DOCKERHUB_CRED = 'dockerhub-creds'
   }
   stages {
     stage('Checkout') { steps { checkout scm } }
-    stage('Build (Maven)') { steps { sh './mvnw clean package -DskipTests' } }
+
+    stage('Build (Maven)') {
+      steps {
+        sh './mvnw clean package -DskipTests'
+      }
+    }
+
     stage('Build Docker Image') {
       steps {
         script {
@@ -15,14 +21,15 @@ pipeline {
         }
       }
     }
+
     stage('Login & Push to Docker Hub') {
       steps {
         withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CRED}", usernameVariable: 'DH_USER', passwordVariable: 'DH_PASS')]) {
-          sh '''
-            echo "$DH_PASS" | docker login -u "$DH_USER" --password-stdin
-            docker push ${DOCKER_IMAGE}:${COMMIT}
-            docker push ${DOCKER_IMAGE}:latest
-          '''
+          script {
+            // compute commit again to ensure availability in this scope
+            def COMMIT = sh(returnStdout: true, script: "git rev-parse --short HEAD").trim()
+            sh "echo \"$DH_PASS\" | docker login -u \"$DH_USER\" --password-stdin && docker push ${DOCKER_IMAGE}:${COMMIT} && docker push ${DOCKER_IMAGE}:latest"
+          }
         }
       }
     }
