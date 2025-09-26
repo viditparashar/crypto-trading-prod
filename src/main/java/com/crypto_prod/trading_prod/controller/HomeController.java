@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class HomeController {
     @GetMapping("/home")
     public String home(){
-        return "Welcome to Crypto Platform Prod CI Test One more one ast";
+        return "Hello World";
     }
 }
