@@ -38,5 +38,4 @@ pipeline {
       }
     }
   }
-  post { success { echo 'CI+CD successful.' } failure { echo 'CI+CD failed.' } }
 }
